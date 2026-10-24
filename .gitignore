@@ -1,0 +1,15 @@
+tools/
+backend/target/
+backend/data/
+*.log
+*.pid
+.DS_Store
+.env
+.env.*
+!.env.example
+backups/
+deploy/private/
+*.key
+*.p12
+
+docs/*.png
