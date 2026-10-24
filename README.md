@@ -36,7 +36,7 @@ Os dados do protótipo anterior foram preservados no banco/backup, mas não apar
 
 ## Desenvolvimento
 
-Backend Java/Spring Boot, interface Vue 3 e banco local H2. Persistência inicial por documento JSON. Sem login ou integração com sistemas internos; serviço acessível somente neste computador.
+Backend Java/Spring Boot e interface Vue 3. O desenvolvimento local usa H2; o perfil cloud usa PostgreSQL do Supabase e exige login. A persistência é por documento JSON, com proteção contra alterações concorrentes. A integração com o ERP ainda não está implementada.
 
 Pare o aplicativo antes de recompilar. Com Maven: `mvn -f backend/pom.xml package`. Nesta máquina também há Maven em `tools/apache-maven-3.9.11/bin/mvn.cmd`. Após compilar, use o iniciador novamente.
 

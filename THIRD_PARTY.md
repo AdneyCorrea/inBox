@@ -8,3 +8,7 @@
 - Apache Maven 3.9.11: ferramenta local em `tools/`, fora dos fontes versionáveis. Origem: https://repo.maven.apache.org/maven2/org/apache/maven/apache-maven/3.9.11/apache-maven-3.9.11-bin.zip. Licença Apache 2.0.
 
 O frontend não carrega recursos de CDN durante o uso normal.
+
+- Spring Security: versão gerenciada pelo Spring Boot, licença Apache 2.0. https://spring.io/projects/spring-security
+- PostgreSQL JDBC: versão gerenciada pelo Spring Boot, licença BSD-2-Clause. https://jdbc.postgresql.org/
+- Eclipse Temurin e Maven: imagens oficiais usadas no Dockerfile para compilação e execução. https://adoptium.net/
