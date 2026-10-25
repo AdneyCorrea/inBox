@@ -18,6 +18,7 @@ public class PcApi {
     private State current(long revision){State s=store.read();if(s.generation!=revision)throw new ResponseStatusException(HttpStatus.CONFLICT,"Os cadastros mudaram. Atualize antes de salvar.");return s;}
     public static String normalized(String code){return code==null?"":code.trim().toUpperCase(Locale.ROOT);}
     public static String defaultMode(DimensionProduct p,String origin){
+        if("CONFIG".equals(origin)&&(p.oem||"CABLE".equals(p.category)))return "OEM";
         if(Set.of("CHAIR","DESK","DESK_LEG").contains(p.category)||"EXTRA".equals(origin)&&Set.of("MONITOR","MONITOR_SUPPORT","UPS").contains(p.category))return "FACTORY";
         return "CONFIG".equals(origin)&&Set.of("MEMORY","SSD").contains(p.category)?"NESTED":"MAIN";
     }
@@ -74,6 +75,7 @@ public class PcApi {
         if(pc.items.stream().anyMatch(i->i.origin.equals("CONFIG"))&&prepared!=1)plan.issues.add("Selecione exatamente um gabinete para a configuração.");
         for(PcItem item:pc.items){
             DimensionProduct product=products.get(item.productId);plan.demo|=product.demo;
+            if(item.origin.equals("CONFIG")&&(product.oem||"CABLE".equals(product.category))){plan.notes.add(product.name+": "+(product.oem?"OEM":"cabo incluído")+", medidas desconsideradas no PC montado.");continue;}
             boolean factory=Set.of("CHAIR","DESK","DESK_LEG").contains(product.category)||item.origin.equals("CONFIG")&&item.mode.equals("FACTORY")
                 ||item.origin.equals("EXTRA")&&Set.of("MONITOR","MONITOR_SUPPORT","UPS").contains(product.category);
             if(factory){Group g=new Group(item.id,product.name,"FACTORY");g.selection.add(new DimensionsApi.Selection(item.productId,item.quantity));g.volumes=item.quantity;plan.groups.add(g);continue;}

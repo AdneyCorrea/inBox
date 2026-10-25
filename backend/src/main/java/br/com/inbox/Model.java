@@ -64,6 +64,7 @@ public final class Model {
         public String id = Model.id(), name = "", sku = "";
         public Integer l, w, h;
         public boolean demo;
+        public boolean oem;
         public String category = "OTHER", pcMode = "MAIN", topic = "";
     }
     public static class DimensionBox {

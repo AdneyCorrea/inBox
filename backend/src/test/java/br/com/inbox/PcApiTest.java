@@ -14,6 +14,44 @@ import static br.com.inbox.Model.*;
 @SpringBootTest(properties={"spring.datasource.url=jdbc:h2:mem:pctest;DB_CLOSE_DELAY=-1"})
 @AutoConfigureMockMvc
 class PcApiTest {
+    @Test void oemFlagSurvivesSavingAndCanBeUnchecked() throws Exception {
+        State s=store.read();DimensionProduct p=s.dimensionProducts.get(1);p.oem=true;
+        mvc.perform(put("/api/simple/products/"+p.id).header("X-State-Revision",s.generation).contentType("application/json").content(store.json(p))).andExpect(status().isOk());
+        State saved=store.read();assertTrue(saved.dimensionProducts.stream().filter(x->x.id.equals(p.id)).findFirst().orElseThrow().oem);
+        p.oem=false;
+        mvc.perform(put("/api/simple/products/"+p.id).header("X-State-Revision",saved.generation).contentType("application/json").content(store.json(p))).andExpect(status().isOk());
+        assertFalse(store.read().dimensionProducts.stream().filter(x->x.id.equals(p.id)).findFirst().orElseThrow().oem);
+    }
+    @Test void includedCablesNeedNoMeasurementsButStandaloneCablesDo(){
+        State s=store.read();PcExamples.addHighflyer(s);PcPreset pc=PcApi.resolve(s,"66705");
+        for(DimensionProduct p:s.dimensionProducts)if(p.category.equals("CABLE")){p.l=null;p.w=null;p.h=null;PcItem i=new PcItem();i.productId=p.id;pc.items.add(i);}
+        PcApi.PcPlan included=api.calculate(s,pc);
+        assertEquals("FOUND",included.groups.get(0).result.status());
+        assertTrue(included.groups.get(0).selection.stream().noneMatch(i->s.dimensionProducts.stream().anyMatch(p->p.id.equals(i.productId())&&p.category.equals("CABLE"))));
+        for(String id:java.util.List.of("pichau-example-hf-power-cable","pichau-example-hf-hdmi")){
+            DimensionProduct cable=s.dimensionProducts.stream().filter(p->p.id.equals(id)).findFirst().orElseThrow();
+            assertEquals("OEM",PcApi.defaultMode(cable,"CONFIG"));assertEquals("MAIN",PcApi.defaultMode(cable,"EXTRA"));
+            PcPreset extra=new PcPreset();extra.code="CABO";extra.name="Cabo avulso";
+            PcItem line=new PcItem();line.productId=id;line.origin="EXTRA";extra.items.add(line);
+            assertEquals("PENDING",api.calculate(s,extra).groups.get(0).result.status());
+            cable.l=180;cable.w=120;cable.h=40;
+            assertEquals("FOUND",api.calculate(s,extra).groups.get(0).result.status());
+        }
+    }
+    @Test void catalogOemIsIgnoredInPcButMeasuredWhenStandalone(){
+        State s=store.read();PcPreset pc=PcApi.resolve(s,"66705");
+        DimensionProduct cpu=s.dimensionProducts.stream().filter(p->p.id.equals("pichau-example-hf-cpu")).findFirst().orElseThrow();
+        cpu.oem=true;cpu.l=99999;
+        assertEquals("OEM",PcApi.defaultMode(cpu,"CONFIG"));assertEquals("MAIN",PcApi.defaultMode(cpu,"EXTRA"));
+        PcApi.PcPlan included=api.calculate(s,pc);
+        assertEquals("FOUND",included.groups.get(0).result.status());
+        assertTrue(included.groups.get(0).selection.stream().noneMatch(i->i.productId().equals(cpu.id)));
+        PcPreset extra=new PcPreset();extra.code="AVULSO";extra.name="Avulso";
+        PcItem line=new PcItem();line.productId=cpu.id;line.origin="EXTRA";line.mode="OEM";extra.items.add(line);
+        PcApi.Group group=api.calculate(s,extra).groups.get(0);
+        assertTrue(group.selection.stream().anyMatch(i->i.productId().equals(cpu.id)));
+        assertNotEquals("FOUND",group.result.status());
+    }
     @Autowired MockMvc mvc;
     @Autowired Store store;
     @Autowired PcApi api;
