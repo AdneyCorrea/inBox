@@ -55,8 +55,8 @@
       const path=points=>{ctx.beginPath();ctx.moveTo(points[0].x,points[0].y);points.slice(1).forEach(p=>ctx.lineTo(p.x,p.y));ctx.closePath();};
       const outer=G.corners(0,0,0,box.l,box.w,box.h).map(project);
       // A lightly shaded floor makes the empty space visible without hiding packages.
-      path([outer[0],outer[1],outer[2],outer[3]]);ctx.fillStyle='#e7e5d85c';ctx.fill();
-      ctx.strokeStyle='#b2b7a9';ctx.lineWidth=1;ctx.setLineDash([4,4]);
+      path([outer[0],outer[1],outer[2],outer[3]]);ctx.fillStyle='#55556640';ctx.fill();
+      ctx.strokeStyle='#777789';ctx.lineWidth=1;ctx.setLineDash([4,4]);
       G.edges.forEach(([a,b])=>{ctx.beginPath();ctx.moveTo(outer[a].x,outer[a].y);ctx.lineTo(outer[b].x,outer[b].y);ctx.stroke();});ctx.setLineDash([]);
       const surfaces=[];
       this.result.placements.forEach((item,index)=>{
@@ -68,7 +68,7 @@
       for(const surface of surfaces){
         const {points,index,face}=surface;const active=this.selected===index;
         path(points);ctx.fillStyle=shade(palette[index%palette.length],face.shade);ctx.fill();
-        ctx.lineWidth=active?2.5:1;ctx.strokeStyle=active?'#254d46':'#ffffffaa';ctx.stroke();
+        ctx.lineWidth=active?2.5:1;ctx.strokeStyle=active?'#ff405c':'#ffffffaa';ctx.stroke();
         if(face.normal[2]===1){
           const x=points.reduce((s,p)=>s+p.x,0)/4,y=points.reduce((s,p)=>s+p.y,0)/4;
           ctx.beginPath();ctx.arc(x,y,active?12:10,0,Math.PI*2);ctx.fillStyle='#fffffff0';ctx.fill();
@@ -76,12 +76,12 @@
         }
       }
       // The outer volume stays transparent: the top is open and its edges show the limit.
-      ctx.lineWidth=1.4;ctx.strokeStyle='#667e727d';
+      ctx.lineWidth=1.4;ctx.strokeStyle='#a4a4bd99';
       for(const [a,b] of G.edges){ctx.beginPath();ctx.moveTo(outer[a].x,outer[a].y);ctx.lineTo(outer[b].x,outer[b].y);ctx.stroke();}
       const cm=value=>(value/10).toLocaleString('pt-BR',{maximumFractionDigits:1})+' cm';
       const labels=[{a:0,b:1,text:cm(box.l),dx:0,dy:17},{a:1,b:2,text:cm(box.w),dx:20,dy:9},{a:3,b:7,text:cm(box.h),dx:-24,dy:0}];
       ctx.font='11px "Segoe UI", sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';
-      for(const label of labels){const a=outer[label.a],b=outer[label.b];if(Math.hypot(a.x-b.x,a.y-b.y)<15)continue;const x=(a.x+b.x)/2+label.dx,y=(a.y+b.y)/2+label.dy;const tw=ctx.measureText(label.text).width;ctx.fillStyle='#f6f8f2e8';ctx.fillRect(x-tw/2-4,y-8,tw+8,16);ctx.fillStyle='#718174';ctx.fillText(label.text,x,y);}
+      for(const label of labels){const a=outer[label.a],b=outer[label.b];if(Math.hypot(a.x-b.x,a.y-b.y)<15)continue;const x=(a.x+b.x)/2+label.dx,y=(a.y+b.y)/2+label.dy;const tw=ctx.measureText(label.text).width;ctx.fillStyle='#20202bf0';ctx.fillRect(x-tw/2-4,y-8,tw+8,16);ctx.fillStyle='#e0dfe9';ctx.fillText(label.text,x,y);}
     }
     destroy(){this.destroyed=true;cancelAnimationFrame(this.frame);this.observer.disconnect();for(const [name,fn,options] of this.listeners)this.canvas.removeEventListener(name,fn,options);this.pointers.clear();}
   }

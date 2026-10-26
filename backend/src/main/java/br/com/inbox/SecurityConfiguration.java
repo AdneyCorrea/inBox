@@ -29,7 +29,7 @@ public class SecurityConfiguration {
   entries.put(new AntPathRequestMatcher("/api/**"),new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED));
   var entryPoint=new DelegatingAuthenticationEntryPoint(entries);
   entryPoint.setDefaultEntryPoint(new LoginUrlAuthenticationEntryPoint("/login.html"));
-  http.authorizeHttpRequests(a->a.requestMatchers("/login.html","/login.js","/simple.css","/auth/session","/api/health","/api/health/ready","/error").permitAll().anyRequest().authenticated())
+  http.authorizeHttpRequests(a->a.requestMatchers("/login.html","/login.js","/theme.css","/simple.css","/auth/session","/api/health","/api/health/ready","/error").permitAll().anyRequest().authenticated())
    .formLogin(f->f.loginPage("/login.html").loginProcessingUrl("/login").defaultSuccessUrl("/",true).failureUrl("/login.html?error").permitAll())
    .logout(l->l.logoutUrl("/logout").logoutSuccessUrl("/login.html?logout").invalidateHttpSession(true).deleteCookies("JSESSIONID"))
    .exceptionHandling(e->e.authenticationEntryPoint(entryPoint))
