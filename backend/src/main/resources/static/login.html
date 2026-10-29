@@ -1,10 +1,55 @@
-<!doctype html><html lang="pt-BR"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Entrar · inBox</title><link rel="stylesheet" href="/simple.css"><link rel="stylesheet" href="/theme.css"><script defer src="/login.js"></script></head><body class="login-body"><main class="login-page">
-<section class="login-art" aria-label="Identidade visual inBox"><div class="login-kicker">Precisão em cada volume</div><div class="pigeon-frame">
-<svg class="pigeon-art pigeon-generated" viewBox="0 0 1280 1280" role="img" aria-labelledby="pigeon-title">
-<title id="pigeon-title">Pombo futurista com óculos e sensor vermelho de neon pulsante</title>
-<image href="/assets/pigeon-futuristic.png" width="1280" height="1280"/>
-<g class="pigeon-neon"><path d="M292 512H513L489 536H316Z" fill="#ff163c"/><path d="M303 516H501" fill="none" stroke="#ff98ac" stroke-width="2"/></g>
-</svg>
-<span class="login-art-caption" aria-hidden="true">01 / EMBALAGEM INTELIGENTE</span></div><h2>A caixa certa.<br><span>Sem adivinhação.</span></h2><p>Dimensões organizadas. Espaço bem aproveitado.<br>Da seleção dos itens à próxima embalagem.</p></section>
-<section class="card login-card"><a class="brand" href="/"><strong>inBox<span>.</span></strong></a><h1>Entre para continuar</h1><p class="helper">Seu próximo volume começa aqui.</p><p id="login-message" class="notice error" role="alert" hidden></p><form action="/login" method="post"><input id="csrf" type="hidden"><label>Usuário<input name="username" autocomplete="username" required maxlength="100" autofocus placeholder="Seu usuário"></label><label>Senha<input name="password" type="password" autocomplete="current-password" required placeholder="Sua senha"></label><button id="login-submit" class="button primary" disabled>Entrar</button></form><p class="helper login-access-note">Acesso restrito à equipe. Para recuperar sua senha, procure o responsável pelo aplicativo.</p></section>
-</main></body></html>
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Entrar · inBox</title>
+    <link rel="stylesheet" href="/simple.css" />
+    <link rel="stylesheet" href="/theme.css" />
+    <script defer src="/js/http.js"></script>
+    <script defer src="/login.js"></script>
+  </head>
+  <body class="login-body">
+    <main class="login-page">
+      <section class="card login-card">
+        <a class="brand" href="/">
+          <strong>
+            inBox
+            <span>.</span>
+          </strong>
+        </a>
+        <h1>Entre para continuar</h1>
+        <p class="helper">Acesse os cadastros e encontre a caixa para seu pedido.</p>
+        <p id="login-message" class="notice error" role="alert" hidden></p>
+        <form action="/login" method="post">
+          <input id="csrf" type="hidden" />
+          <label>
+            Usuário
+            <input
+              name="username"
+              autocomplete="username"
+              required
+              maxlength="100"
+              autofocus
+              placeholder="Seu usuário"
+            />
+          </label>
+          <label>
+            Senha
+            <input
+              name="password"
+              type="password"
+              autocomplete="current-password"
+              required
+              placeholder="Sua senha"
+            />
+          </label>
+          <button id="login-submit" class="button primary" disabled>Entrar</button>
+        </form>
+        <p class="helper login-access-note">
+          Acesso restrito à equipe. Para recuperar sua senha, procure o responsável pelo aplicativo.
+        </p>
+      </section>
+    </main>
+  </body>
+</html>

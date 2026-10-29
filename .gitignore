@@ -9,7 +9,15 @@ backend/data/
 !.env.example
 backups/
 deploy/private/
+backend/deploy/private/
 *.key
 *.p12
 
 docs/*.png
+
+# Rotated logs and temporary packaging descriptors are generated locally.
+*.log.*
+backend/pom-ui-preview.xml
+
+# Native launcher is built from scripts/Launcher.cs.
+/inBox.exe

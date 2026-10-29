@@ -2,9 +2,13 @@ package br.com.inbox;
 
 import java.util.*;
 
+/** Contratos persistidos. Campos antigos sao mantidos para ler e restaurar backups existentes. */
 public final class Model {
-    private Model() {}
-    public static String id() { return UUID.randomUUID().toString(); }
+    private Model() {
+    }
+    public static String id() {
+        return UUID.randomUUID().toString();
+    }
     public static class Pack {
         public String label = "Embalagem";
         public Integer l, w, h, weight;
@@ -45,11 +49,20 @@ public final class Model {
     }
     public static class Event {
         public String id = Model.id(), at = java.time.Instant.now().toString(), action, reference, operator, detail;
-        public Event() {}
-        public Event(String a,String r,String o,String d) { action=a; reference=r; operator=o; detail=d; }
+        public Event() {
+        }
+        public Event(String a,String r,String o,String d) {
+            action=a;
+            reference=r;
+            operator=o;
+            detail=d;
+        }
     }
     public static class State {
+        // Mantemos também os campos do protótipo anterior para ler backups antigos.
         public int version = 1;
+        // Número da última gravação. A interface devolve esse valor ao salvar,
+        // para o Store perceber se outra tela já alterou o cadastro.
         public long generation;
         public List<Product> products = new ArrayList<>();
         public List<Box> boxes = new ArrayList<>();
@@ -61,6 +74,8 @@ public final class Model {
         public List<PcPreset> dimensionPcs = new ArrayList<>();
     }
     public static class DimensionProduct {
+        // A tela mostra centímetros, mas aqui e no banco trabalhamos em milímetros.
+        // null significa "ainda não medido"; não é uma embalagem de tamanho zero.
         public String id = Model.id(), name = "", sku = "";
         public Integer l, w, h;
         public boolean demo;
@@ -88,14 +103,31 @@ public final class Model {
         public Pack pack;
         public int quantity;
         public boolean demo;
-        public ObjectItem(String k,Product p,Pack pkg,int q) { key=k; sku=p.sku; name=p.name; pack=pkg; quantity=q; demo="DEMO".equals(pkg.status); }
+        public ObjectItem(String k,Product p,Pack pkg,int q) {
+            key=k;
+            sku=p.sku;
+            name=p.name;
+            pack=pkg;
+            quantity=q;
+            demo="DEMO".equals(pkg.status);
+        }
     }
     public static class Placement {
+        // Posição do canto inferior: X = comprimento, Y = largura, Z = altura.
+        // O 3D desenha exatamente estas posições; ele não decide como encaixar.
         public String key, name;
         public int x,y,z,l,w,h;
         public boolean stackable;
         public Placement(ObjectItem item,int x,int y,int z,int l,int w,int h) {
-            key=item.key; name=item.name; this.x=x;this.y=y;this.z=z;this.l=l;this.w=w;this.h=h;stackable=item.pack.stackable;
+            key=item.key;
+            name=item.name;
+            this.x=x;
+            this.y=y;
+            this.z=z;
+            this.l=l;
+            this.w=w;
+            this.h=h;
+            stackable=item.pack.stackable;
         }
     }
     public static class Candidate {
@@ -111,7 +143,11 @@ public final class Model {
         public Candidate candidate;
         public boolean demo;
         public int ownVolumes;
-        public Group(String id,String label,String kind) { this.id=id;this.label=label;this.kind=kind; }
+        public Group(String id,String label,String kind) {
+            this.id=id;
+            this.label=label;
+            this.kind=kind;
+        }
     }
     public static class Plan {
         public List<Group> groups = new ArrayList<>();

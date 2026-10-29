@@ -4,34 +4,86 @@ import java.util.*;
 import static br.com.inbox.Model.*;
 
 /** Public configuration descriptions; component SKUs and ALL dimensions below are synthetic. */
+/** Configuracoes de exemplo; suas dimensoes nao devem ser usadas como medidas reais. */
 public class PcExamples {
     /** User-facing seed contains only the requested Highflyer, never unrelated orders. */
     public static void addHighflyer(State s){
-        State seed=new State();add(seed);
+        State seed=new State();
+        add(seed);
         PcPreset highflyer=seed.dimensionPcs.stream().filter(pc->pc.code.equals(HF)).findFirst().orElseThrow();
         highflyer.items.add(line(product(seed,"hf-power-cable","Cabo de alimentação","CABLE","MAIN",180,120,40)));
         highflyer.items.add(line(product(seed,"hf-hdmi","Cabo HDMI","CABLE","MAIN",180,120,40)));
         for(DimensionProduct p:seed.dimensionProducts)if(p.id.startsWith("pichau-example-hf-")&&s.dimensionProducts.stream().noneMatch(x->x.id.equals(p.id)))s.dimensionProducts.add(p);
         for(PcPreset pc:seed.dimensionPcs)if(pc.code.equals(HF)&&s.dimensionPcs.stream().noneMatch(x->x.code.equalsIgnoreCase(HF)))s.dimensionPcs.add(pc);
         for(DimensionBox b:seed.dimensionBoxes)if(s.dimensionBoxes.stream().noneMatch(x->x.id.equals(b.id)))s.dimensionBoxes.add(b);
-        int[][] extraSizes={{200,150,100},{300,250,150},{400,300,200},{500,400,300},{600,450,400},{800,700,700},{1300,1000,1000}};
+        int[][] extraSizes={
+            {
+                200,150,100
+            },{
+                300,250,150
+            },{
+                400,300,200
+            },{
+                500,400,300
+            },{
+                600,450,400
+            },{
+                800,700,700
+            },{
+                1300,1000,1000
+            }
+        };
         for(int[] size:extraSizes){
             String id="demo-box-"+size[0]+"-"+size[1]+"-"+size[2];
             if(s.dimensionBoxes.stream().anyMatch(b->b.id.equals(id)))continue;
-            DimensionBox b=new DimensionBox();b.id=id;b.name="Caixa "+size[0]/10+" × "+size[1]/10+" × "+size[2]/10+" cm · exemplo";b.l=size[0];b.w=size[1];b.h=size[2];b.demo=true;s.dimensionBoxes.add(b);
+            DimensionBox b=new DimensionBox();
+            b.id=id;
+            b.name="Caixa "+size[0]/10+" × "+size[1]/10+" × "+size[2]/10+" cm · exemplo";
+            b.l=size[0];
+            b.w=size[1];
+            b.h=size[2];
+            b.demo=true;
+            s.dimensionBoxes.add(b);
         }
     }
     public static final String HF="PCM-Pichau-Highflyer-66705", GAMER="PCM-Pichau-Gamer-68475";
     private static DimensionProduct product(State s,String key,String name,String category,String mode,int l,int w,int h){
-        String id="pichau-example-"+key;DimensionProduct existing=s.dimensionProducts.stream().filter(p->p.id.equals(id)).findFirst().orElse(null);if(existing!=null)return existing;
-        DimensionProduct p=new DimensionProduct();p.id=id;p.sku="DEMO-"+key.toUpperCase(Locale.ROOT);p.name=name;p.category=category;p.pcMode=mode;p.l=l;p.w=w;p.h=h;p.demo=true;s.dimensionProducts.add(p);return p;
+        String id="pichau-example-"+key;
+        DimensionProduct existing=s.dimensionProducts.stream().filter(p->p.id.equals(id)).findFirst().orElse(null);
+        if(existing!=null)return existing;
+        DimensionProduct p=new DimensionProduct();
+        p.id=id;
+        p.sku="DEMO-"+key.toUpperCase(Locale.ROOT);
+        p.name=name;
+        p.category=category;
+        p.pcMode=mode;
+        p.l=l;
+        p.w=w;
+        p.h=h;
+        p.demo=true;
+        s.dimensionProducts.add(p);
+        return p;
     }
-    private static PcItem line(DimensionProduct p){PcItem i=new PcItem();i.productId=p.id;i.mode=p.pcMode;return i;}
+    private static PcItem line(DimensionProduct p){
+        PcItem i=new PcItem();
+        i.productId=p.id;
+        i.mode=p.pcMode;
+        return i;
+    }
     private static PcPreset pc(State s,String code,String name,String source,String alias,List<DimensionProduct> products){
-        PcPreset existing=s.dimensionPcs.stream().filter(p->p.code.equalsIgnoreCase(code)).findFirst().orElse(null);if(existing!=null)return existing;
-        PcPreset pc=new PcPreset();pc.id="example-"+alias;pc.code=code;pc.name=name;pc.sourceUrl=source;pc.demo=true;pc.aliases.add(alias);
+        PcPreset existing=s.dimensionPcs.stream().filter(p->p.code.equalsIgnoreCase(code)).findFirst().orElse(null);
+        if(existing!=null)return existing;
+        PcPreset pc=new PcPreset();
+        pc.id="example-"+alias;
+        pc.code=code;
+        pc.name=name;
+        pc.sourceUrl=source;
+        pc.demo=true;
+        pc.aliases.add(alias);
         pc.note="Composição de demonstração baseada na descrição pública. SKUs das peças e todas as medidas são fictícios. Marcas/modelos e embalagens acompanhantes precisam ser confirmados na operação.";
-        products.forEach(p->pc.items.add(line(p)));s.dimensionPcs.add(pc);return pc;
+        products.forEach(p->pc.items.add(line(p)));
+        s.dimensionPcs.add(pc);
+        return pc;
     }
     public static void add(State s){
         DimensionProduct hfPc=product(s,"hf-pc","Pichau - Voyager One","PREPARED_PC","MAIN",650,330,650);
@@ -59,17 +111,67 @@ public class PcExamples {
         DimensionProduct mouse=product(s,"mouse","Mouse · exemplo avulso","PERIPHERAL","MAIN",160,100,70);
         addCustom(s,hf,"DEMO-PEDIDO-66705",hfGpu,upgradeGpu,fan,monitor,null,null);
         addCustom(s,gamer,"DEMO-PEDIDO-68475",gamerRam,ram32,null,monitor,headset,mouse);
-        int[][] sizes={{700,600,600},{950,750,750},{1100,850,850}};
-        for(int i=0;i<sizes.length;i++){String id="pc-example-box-"+i;if(s.dimensionBoxes.stream().noneMatch(b->b.id.equals(id))){DimensionBox b=new DimensionBox();b.id=id;b.name="PC "+(i+1)+" · exemplo";b.l=sizes[i][0];b.w=sizes[i][1];b.h=sizes[i][2];b.demo=true;s.dimensionBoxes.add(b);}}
+        int[][] sizes={
+            {
+                700,600,600
+            },{
+                950,750,750
+            },{
+                1100,850,850
+            }
+        };
+        for(int i=0;i<sizes.length;i++){
+            String id="pc-example-box-"+i;
+            if(s.dimensionBoxes.stream().noneMatch(b->b.id.equals(id))){
+                DimensionBox b=new DimensionBox();
+                b.id=id;
+                b.name="PC "+(i+1)+" · exemplo";
+                b.l=sizes[i][0];
+                b.w=sizes[i][1];
+                b.h=sizes[i][2];
+                b.demo=true;
+                s.dimensionBoxes.add(b);
+            }
+        }
     }
     private static void addCustom(State s,PcPreset base,String code,DimensionProduct original,DimensionProduct replacement,DimensionProduct fan,DimensionProduct monitor,DimensionProduct headset,DimensionProduct mouse){
         if(s.dimensionPcs.stream().anyMatch(p->p.code.equals(code)))return;
-        PcPreset order=new PcPreset();order.id="example-"+code;order.kind="ORDER";order.code=code;order.baseCode=base.code;order.name=base.name+" · personalizado";order.sourceUrl=base.sourceUrl;order.demo=true;
+        PcPreset order=new PcPreset();
+        order.id="example-"+code;
+        order.kind="ORDER";
+        order.code=code;
+        order.baseCode=base.code;
+        order.name=base.name+" · personalizado";
+        order.sourceUrl=base.sourceUrl;
+        order.demo=true;
         order.note="Pedido fictício para testar substituições e adicionais; não é uma compra real nem representa as opções atuais do site.";
-        for(PcItem item:base.items){DimensionProduct product=s.dimensionProducts.stream().filter(p->p.id.equals(item.productId)).findFirst().orElseThrow();PcItem clone=line(product);if(product.id.equals(original.id)){clone=line(replacement);clone.customized=true;}order.items.add(clone);}
-        if(fan!=null){PcItem extra=line(fan);extra.quantity=3;extra.customized=true;order.items.add(extra);}
-        PcItem screen=line(monitor);screen.origin=headset==null?"CONFIG":"EXTRA";screen.customized=true;order.items.add(screen);
-        if(headset!=null){PcItem extra=line(headset);extra.origin="EXTRA";order.items.add(extra);extra=line(mouse);extra.origin="EXTRA";order.items.add(extra);}
+        for(PcItem item:base.items){
+            DimensionProduct product=s.dimensionProducts.stream().filter(p->p.id.equals(item.productId)).findFirst().orElseThrow();
+            PcItem clone=line(product);
+            if(product.id.equals(original.id)){
+                clone=line(replacement);
+                clone.customized=true;
+            }
+            order.items.add(clone);
+        }
+        if(fan!=null){
+            PcItem extra=line(fan);
+            extra.quantity=3;
+            extra.customized=true;
+            order.items.add(extra);
+        }
+        PcItem screen=line(monitor);
+        screen.origin=headset==null?"CONFIG":"EXTRA";
+        screen.customized=true;
+        order.items.add(screen);
+        if(headset!=null){
+            PcItem extra=line(headset);
+            extra.origin="EXTRA";
+            order.items.add(extra);
+            extra=line(mouse);
+            extra.origin="EXTRA";
+            order.items.add(extra);
+        }
         s.dimensionPcs.add(order);
     }
 }
