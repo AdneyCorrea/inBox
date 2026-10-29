@@ -1,3 +1,4 @@
+// Lê e grava o estado da aplicação em JSON no banco, com controle de revisão concorrente.
 package br.com.inbox;
 
 import com.fasterxml.jackson.databind.ObjectMapper;

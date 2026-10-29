@@ -1,3 +1,4 @@
+// Encaminha a página inicial e os endereços antigos para a interface atual.
 package br.com.inbox;
 
 import org.springframework.stereotype.Controller;

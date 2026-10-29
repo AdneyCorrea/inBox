@@ -1,3 +1,4 @@
+// Informa o estado da sessão e fornece o token CSRF para operações autenticadas.
 package br.com.inbox;
 
 import java.util.*;

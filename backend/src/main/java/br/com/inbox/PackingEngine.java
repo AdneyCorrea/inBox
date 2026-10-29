@@ -1,3 +1,4 @@
+// Calcula sugestões de caixas e posições dos itens, respeitando encaixe, rotação e apoio.
 package br.com.inbox;
 
 import java.util.*;

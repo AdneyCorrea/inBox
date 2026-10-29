@@ -1,3 +1,4 @@
+// Valida as configurações obrigatórias de banco e autenticação no ambiente de nuvem.
 package br.com.inbox;
 
 import org.springframework.context.annotation.*;

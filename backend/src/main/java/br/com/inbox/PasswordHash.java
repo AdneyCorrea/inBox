@@ -1,3 +1,4 @@
+// Gera e valida hashes de senha para configurar o acesso à aplicação.
 package br.com.inbox;
 
 import java.util.Arrays;

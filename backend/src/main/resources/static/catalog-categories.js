@@ -1,3 +1,4 @@
+// Disponibiliza os departamentos e as categorias de produtos usados pela interface.
 globalThis.CatalogDepartments = [
   {
     id: "hardware",

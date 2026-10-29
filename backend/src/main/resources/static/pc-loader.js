@@ -1,3 +1,4 @@
+// Define o componente de edição da lista de peças e de seleção dos itens da composição.
 (() => {
   const categories = {
     PREPARED_PC: "Gabinete",

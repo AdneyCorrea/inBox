@@ -1,4 +1,5 @@
-﻿param([int]$Port = 8080, [switch]$SemAbrirNavegador)
+﻿# Inicia ou reutiliza o servidor local, aguarda sua resposta e abre o navegador.
+param([int]$Port = 8080, [switch]$SemAbrirNavegador)
 $ErrorActionPreference = 'Stop'
 $projectRoot = Split-Path -Parent (Split-Path -Parent $PSScriptRoot)
 $backendDir = Join-Path $projectRoot 'backend'

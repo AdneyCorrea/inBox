@@ -1,3 +1,4 @@
+// Testa regras de embalagem, encaixe geométrico e composição dos volumes.
 package br.com.inbox;
 
 import java.util.*;

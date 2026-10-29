@@ -1,3 +1,4 @@
+// Configura autenticação, permissões de acesso e proteção CSRF das requisições.
 package br.com.inbox;
 
 import org.springframework.context.annotation.*;

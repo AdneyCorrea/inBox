@@ -1,3 +1,4 @@
+// Fornece cálculos geométricos e projeções usados na visualização 3D das embalagens.
 /* O desenho usa os mesmos eixos da API: X = comprimento, Y = largura, Z = altura.
  * Girar a câmera muda só a visão; as posições calculadas pelo servidor ficam iguais. */
 (() => {

@@ -1,3 +1,4 @@
+// Carrega e indexa as categorias do catálogo e normaliza categorias de produtos.
 package br.com.inbox;
 
 import java.util.*;

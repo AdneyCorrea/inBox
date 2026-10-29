@@ -1,12 +1,9 @@
-﻿
+﻿# Compila a aplicação em uma área separada e prepara o pacote para atualização local.
+
 $ErrorActionPreference = 'Stop'
 $projectRoot = Split-Path -Parent (Split-Path -Parent $PSScriptRoot)
 . (Join-Path $PSScriptRoot 'runtime.ps1')
-$javaExe = Get-InboxJava
 $sourceFingerprint = Get-InboxSourceFingerprint $projectRoot
-$mavenRoot = Join-Path $projectRoot 'backend\scripts\tools\apache-maven-3.9.11'
-$launcher = Join-Path $mavenRoot 'boot\plexus-classworlds-2.9.0.jar'
-if (-not (Test-Path -LiteralPath $launcher)) { throw 'Maven local nao encontrado em backend/scripts/tools/apache-maven-3.9.11.' }
 
 # Compila separado do JAR aberto pelo servidor. A troca ocorre apenas no atualizador.
 $staging = Join-Path $projectRoot 'backend\target\staging'
@@ -24,18 +21,12 @@ if (Test-Path -LiteralPath $staging) {
     }
 }
 $arguments = @(
-    "-Dmaven.multiModuleProjectDirectory=$projectRoot\backend",
-    "-Dmaven.home=$mavenRoot",
-    '-classpath', $launcher,
-    "-Dclassworlds.conf=$mavenRoot\bin\m2.conf",
-    'org.codehaus.plexus.classworlds.launcher.Launcher',
     '-f', (Join-Path $projectRoot 'backend\pom.xml'),
     "-Dinbox.build.directory=$staging", 'package', '-Dmaven.test.skip=true'
 )
 
 
-& $javaExe @arguments
-if ($LASTEXITCODE -ne 0) { throw 'A compilacao falhou. A versao em execucao foi preservada.' }
+Invoke-InboxMaven -Arguments $arguments
 if ((Get-InboxSourceFingerprint $projectRoot) -ne $sourceFingerprint) { throw 'O codigo mudou durante a compilacao. Abra o inBox novamente.' }
 [IO.File]::WriteAllText((Join-Path $staging 'source.sha256'), $sourceFingerprint, (New-Object Text.UTF8Encoding($false)))
 

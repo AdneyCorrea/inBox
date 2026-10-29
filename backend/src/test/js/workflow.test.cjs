@@ -1,3 +1,4 @@
+// Testa os fluxos da interface, incluindo importação, cálculo, cadastros e requisições.
 const test = require('node:test');
 const assert = require('node:assert/strict');
 const vm = require('node:vm');

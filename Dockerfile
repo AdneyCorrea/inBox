@@ -1,3 +1,4 @@
+# Compila o backend e monta a imagem Java usada para executar o inBox na nuvem.
 FROM maven:3.9.11-eclipse-temurin-17 AS build
 WORKDIR /build
 COPY backend/pom.xml ./pom.xml

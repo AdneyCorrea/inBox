@@ -1,3 +1,4 @@
+// Recebe uma lista de peças em JSON e retorna sua composição e previsão de embalagem.
 package br.com.inbox;
 
 import java.util.*;

@@ -1,3 +1,4 @@
+// Define os modelos de dados de cadastros, pedidos, planos de embalagem e backups.
 package br.com.inbox;
 
 import java.util.*;

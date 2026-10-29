@@ -1,3 +1,4 @@
+// Renderiza a visualização 3D das caixas e dos itens nas posições calculadas pelo backend.
 /* Local software-rendered 3D view; no graphics driver or external service needed. */
 (() => {
   const G = PackingGeometry;

@@ -1,3 +1,4 @@
+// Prepara o formulário de login, consulta a sessão e apresenta erros de autenticação.
 document.addEventListener("DOMContentLoaded", async () => {
   const message = document.getElementById("login-message");
   if (new URLSearchParams(location.search).has("error")) {

@@ -1,3 +1,4 @@
+// Analisa o nome do produto e sugere uma categoria usando as regras de palavras-chave.
 (() => {
   const normalize = (value) =>
     String(value || "")

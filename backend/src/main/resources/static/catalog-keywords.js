@@ -1,3 +1,4 @@
+// Define palavras-chave e prioridades para sugerir categorias a partir do nome do produto.
 globalThis.CatalogKeywordRules = [
   {
     id: "monitors/support",

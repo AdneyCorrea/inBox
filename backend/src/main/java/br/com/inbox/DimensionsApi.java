@@ -1,3 +1,4 @@
+// Gerencia produtos e caixas e calcula sugestões de embalagem a partir das medidas.
 package br.com.inbox;
 
 import java.util.*;

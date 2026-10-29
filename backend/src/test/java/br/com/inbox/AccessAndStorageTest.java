@@ -1,3 +1,4 @@
+// Testa autenticação, proteção CSRF, persistência e conflitos de revisão em banco de teste.
 package br.com.inbox;
 
 import org.junit.jupiter.api.Test;

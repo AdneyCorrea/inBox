@@ -1,3 +1,4 @@
+// Gerencia composições de PC e separa os itens em grupos conforme suas regras de embalagem.
 package br.com.inbox;
 
 import java.util.*;

@@ -1,3 +1,4 @@
+// Verifica se o banco de dados está disponível para atender à aplicação.
 package br.com.inbox;
 
 import java.util.Map;

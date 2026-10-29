@@ -1,3 +1,4 @@
+// Expõe a API legada de pedidos e conferências, além de exportar e restaurar backups.
 package br.com.inbox;
 
 import java.util.*;

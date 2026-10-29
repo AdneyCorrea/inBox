@@ -12,6 +12,28 @@ Planejamento de embalagem · Organização de volumes · Visualização 3D
 
 ---
 
+## Testar no Windows sem instalar ferramentas
+
+**[Baixar inBox pronto para Windows x64](https://github.com/AdneyCorrea/inBox/releases/download/windows-preview/inBox-Windows.zip)**
+
+Extraia o ZIP inteiro e dê dois cliques em **`inBox/inBox.exe`**. O programa abre o
+navegador automaticamente e já inclui Java. Não precisa instalar Java, Maven ou Git.
+Para encerrar, use **Encerrar inBox** no ícone ao lado do relógio do Windows.
+Os cadastros ficam em `%LOCALAPPDATA%\inBox`, separados do programa.
+
+A versão de teste é gerada automaticamente após os testes de cada atualização da
+`main`. O download fica disponível quando a execução **Windows em um clique**
+terminar com sucesso em [Actions](https://github.com/AdneyCorrea/inBox/actions/workflows/windows.yml).
+O pacote é para Windows x64. Extraia o conteúdo antes de executar; mantenha as
+pastas `app` e `runtime` ao lado do executável.
+
+**Prefere clonar ou usar Code → Download ZIP?** Depois de baixar e extrair o
+repositório, dê dois cliques em **`inBox.cmd`**, na raiz. Ele prepara automaticamente
+as ferramentas ausentes, compila a cópia que você baixou e abre o navegador.
+A primeira execução precisa de internet e pode levar alguns minutos; nas próximas,
+reutiliza o que já foi preparado. Após um `git pull`, abra o mesmo arquivo para
+aplicar as alterações. Esse modo usa os dados locais em `backend/data/`.
+
 ## O que é o inBox?
 
 O **inBox** é uma aplicação web que ajuda na escolha de caixas para embalar produtos e configurações de PC. A partir dos itens, das quantidades e das medidas cadastradas, o programa verifica o encaixe e sugere caixas para os volumes da embalagem.
@@ -33,13 +55,13 @@ O objetivo é facilitar a preparação do envio: entender o que precisa ser emba
 
 ### 1. Abra o programa
 
-Para usar o inicializador local, você precisa de **Windows**, **Java 17 ou superior** e um navegador atualizado.
+Para usar o inicializador local, você precisa de **Windows de 64 bits** e um navegador atualizado. O inicializador detecta Java JDK 17 ou superior e Maven 3 compatível já instalados; se faltarem, baixa e prepara cópias locais automaticamente, sem precisar de administrador.
 
 1. Na raiz do projeto, clique duas vezes em **`inBox.cmd`**.
 2. Aguarde a preparação do programa. Quando houver alterações nos arquivos locais, o inicializador compila e aplica a nova versão.
 3. O navegador será aberto automaticamente em **[http://127.0.0.1:8080](http://127.0.0.1:8080)**.
 
-A primeira compilação pode precisar de internet para baixar dependências. O inicializador utiliza o Maven em `backend/scripts/tools/apache-maven-3.9.11/`; essa pasta precisa estar disponível no ambiente local.
+Na primeira execução, mantenha acesso à internet para baixar as ferramentas ausentes e as dependências da compilação. As cópias locais ficam em `backend/scripts/tools/`, e os downloads são conferidos por checksum. Nas próximas execuções, as ferramentas são reutilizadas. Para conferir somente Java e Maven, execute `inBox.cmd --verificar`.
 
 ### 2. Cadastre os produtos
 
@@ -86,8 +108,8 @@ Essa opção simula uma futura integração com ERP. O formato do arquivo e as r
 
 | Situação | O que verificar |
 | --- | --- |
-| Java não encontrado | Instale Java 17 ou superior e confira a configuração de `JAVA_HOME` ou do `PATH`. |
-| Maven local não encontrado | Confira se a pasta `backend/scripts/tools/apache-maven-3.9.11/` está disponível. |
+| Java não encontrado | Abra `inBox.cmd` com acesso à internet para baixar o JDK automaticamente. |
+| Maven local não encontrado | Abra `inBox.cmd` com acesso à internet para preparar o Maven automaticamente. |
 | Falha ao preparar ou iniciar | Consulte `backend/launcher.log` e `backend/server.log`. |
 | O navegador não abriu | Após iniciar o programa, acesse `http://127.0.0.1:8080` manualmente. |
 
@@ -136,3 +158,39 @@ Para validar alterações, execute na raiz do projeto, com Java, Maven local e N
 ```
 
 O script executa os testes Java e JavaScript em uma área separada, com banco em memória, sem alterar os cadastros locais.
+
+## Versão pronta para Windows
+
+A distribuição desktop inclui Java e o programa compilado. O usuário não precisa
+instalar Java ou Maven, baixar dependências ou compilar o código.
+
+1. Extraia `inBox-Windows.zip` para uma pasta local.
+2. Abra `inBox/inBox.exe`. O navegador abre quando o servidor estiver pronto.
+3. Para encerrar, use **Encerrar inBox** no ícone da bandeja do Windows (ao lado do relógio).
+   Fechar a aba do navegador mantém o programa disponível na bandeja.
+
+Mantenha toda a pasta extraída: o executável depende das subpastas `app` e `runtime`.
+Abrir novamente o executável reutiliza o servidor desktop já iniciado.
+O endereço local é `http://127.0.0.1:18080`.
+
+Os dados e logs ficam em `%LOCALAPPDATA%\inBox`, separados dos arquivos do programa.
+Para levar seus cadastros da versão de desenvolvimento para a desktop, exporte o
+backup na versão anterior e restaure-o na nova. A distribuição não inclui dados,
+senhas ou configurações privadas da máquina que gerou o pacote.
+
+### Gerar a distribuição (desenvolvedor)
+
+Com JDK 21 ou superior e Maven disponíveis, execute na raiz:
+
+```powershell
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\backend\scripts\empacotar.ps1
+```
+
+O script executa os testes Java, compila o programa e usa `jpackage` para gerar
+`backend/target/inBox-Windows.zip`. A pasta do executável também é registrada em
+`backend/target/desktop-path.txt`. Gere o pacote no Windows e na arquitetura dos
+computadores que receberão a distribuição.
+
+Para gerar também um instalador `.exe` com atalhos, adicione `-Installer` ao comando.
+Essa opção exige WiX compatível com a versão do JDK instalada. A distribuição ZIP
+funciona sem WiX e sem instalação administrativa.

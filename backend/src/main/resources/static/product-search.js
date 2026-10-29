@@ -1,3 +1,4 @@
+// Normaliza termos e classifica produtos por relevância para a busca no catálogo.
 (() => {
   const normalize = (value) =>
     String(value || "")

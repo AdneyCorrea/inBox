@@ -1,3 +1,4 @@
+// Cria dados fictícios para demonstração do fluxo legado de pedidos e embalagens.
 package br.com.inbox;
 
 import java.util.*;

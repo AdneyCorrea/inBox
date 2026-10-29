@@ -1,3 +1,4 @@
+// Valida cadastros, pedidos e backups antes de aceitar alterações nos dados.
 package br.com.inbox;
 
 import java.util.*;

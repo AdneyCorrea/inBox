@@ -1,3 +1,4 @@
+-- Cria o schema e a tabela privados do inBox no Supabase e restringe o acesso público.
 -- Execute somente no projeto exclusivo do inBox, pelo SQL Editor do Supabase.
 -- Sem tabelas expostas à API pública do Supabase.
 BEGIN;

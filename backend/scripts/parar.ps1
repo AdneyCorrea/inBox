@@ -1,4 +1,5 @@
-﻿$projectRoot = Split-Path -Parent (Split-Path -Parent $PSScriptRoot)
+﻿# Encerra somente os processos do servidor Java associados a este projeto.
+$projectRoot = Split-Path -Parent (Split-Path -Parent $PSScriptRoot)
 $ErrorActionPreference = 'Stop'
 $pidFile = Join-Path $projectRoot 'backend\server.pid'
 $expectedJars = @(

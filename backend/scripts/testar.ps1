@@ -1,3 +1,4 @@
+# Executa os testes Java e JavaScript em área separada, preservando os dados locais.
 $ErrorActionPreference = 'Stop'
 $projectRoot = Split-Path -Parent (Split-Path -Parent $PSScriptRoot)
 $maven = Join-Path $PSScriptRoot 'tools/apache-maven-3.9.11/bin/mvn.cmd'

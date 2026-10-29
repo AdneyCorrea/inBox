@@ -1,3 +1,4 @@
+// Prepara configurações de PC de exemplo com códigos e medidas fictícios.
 package br.com.inbox;
 
 import java.util.*;
