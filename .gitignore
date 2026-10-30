@@ -1,23 +1,34 @@
-tools/
-backend/target/
-backend/data/
-*.log
-*.pid
-.DS_Store
-.env
-.env.*
-!.env.example
-backups/
-deploy/private/
-backend/deploy/private/
-*.key
-*.p12
+HELP.md
+target/
+.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
 
-docs/*.png
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
 
-# Rotated logs and temporary packaging descriptors are generated locally.
-*.log.*
-backend/pom-ui-preview.xml
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
 
-# Native launcher is built from scripts/Launcher.cs.
-/inBox.exe
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### VS Code ###
+.vscode/
+/catalogo-local/

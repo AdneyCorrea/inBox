@@ -1,0 +1,460 @@
+{
+  "version": 1,
+  "generation": 100,
+  "products": [],
+  "boxes": [],
+  "templates": [],
+  "orders": [],
+  "history": [
+    {
+      "id": "0f515d98-03ba-49da-8348-f04b37e44905",
+      "at": "2026-10-24T19:40:53.298574800Z",
+      "action": "IMPORTAÇÃO",
+      "reference": "Backup",
+      "operator": "",
+      "detail": "Backup restaurado; conferências e conclusões exigem nova validação."
+    }
+  ],
+  "dimensionProducts": [
+    {
+      "id": "pichau-example-hf-power-cable",
+      "name": "Cabo de alimentação",
+      "sku": "DEMO-HF-POWER-CABLE",
+      "l": 180,
+      "w": 120,
+      "h": 40,
+      "demo": true,
+      "oem": false,
+      "category": "CABLE",
+      "pcMode": "MAIN",
+      "topic": "peripherals/cables"
+    },
+    {
+      "id": "pichau-example-hf-hdmi",
+      "name": "Cabo HDMI",
+      "sku": "DEMO-HF-HDMI",
+      "l": 180,
+      "w": 120,
+      "h": 40,
+      "demo": true,
+      "oem": false,
+      "category": "CABLE",
+      "pcMode": "MAIN",
+      "topic": "peripherals/cables"
+    },
+    {
+      "id": "pichau-example-hf-pc",
+      "name": "Pichau Voyager One 3 Fans Black",
+      "sku": "45076",
+      "l": 610,
+      "w": 360,
+      "h": 610,
+      "demo": false,
+      "oem": false,
+      "category": "PREPARED_PC",
+      "pcMode": "MAIN",
+      "topic": "hardware/case"
+    },
+    {
+      "id": "pichau-example-hf-cpu",
+      "name": "AMD Ryzen 9 5900XT",
+      "sku": "50279",
+      "l": 135,
+      "w": 75,
+      "h": 140,
+      "demo": false,
+      "oem": false,
+      "category": "CPU",
+      "pcMode": "MAIN",
+      "topic": "hardware/cpu"
+    },
+    {
+      "id": "pichau-example-hf-mb",
+      "name": "Asus Tuf Gaming B550M-PLUS",
+      "sku": "19665",
+      "l": 280,
+      "w": 270,
+      "h": 70,
+      "demo": false,
+      "oem": false,
+      "category": "MOTHERBOARD",
+      "pcMode": "MAIN",
+      "topic": "hardware/motherboard"
+    },
+    {
+      "id": "pichau-example-hf-ram",
+      "name": "Vant S 16GB 3200Mhz",
+      "sku": "65865",
+      "l": 160,
+      "w": 65,
+      "h": 10,
+      "demo": false,
+      "oem": false,
+      "category": "MEMORY",
+      "pcMode": "NESTED",
+      "topic": "hardware/memory"
+    },
+    {
+      "id": "pichau-example-hf-gpu",
+      "name": "Palit GamingPro-S GeForce RTX 5070 Ti 16 GB",
+      "sku": "56930",
+      "l": 430,
+      "w": 220,
+      "h": 110,
+      "demo": false,
+      "oem": false,
+      "category": "GPU",
+      "pcMode": "MAIN",
+      "topic": "hardware/gpu"
+    },
+    {
+      "id": "pichau-example-hf-ssd",
+      "name": "Kingston KC3000 NVMe 2 TB 7000mb/s",
+      "sku": "37509",
+      "l": 88,
+      "w": 130,
+      "h": 5,
+      "demo": false,
+      "oem": false,
+      "category": "SSD",
+      "pcMode": "NESTED",
+      "topic": "hardware/ssd"
+    },
+    {
+      "id": "pichau-example-hf-psu",
+      "name": "Pichau Cluster 850W",
+      "sku": "48234",
+      "l": 335,
+      "w": 200,
+      "h": 95,
+      "demo": false,
+      "oem": false,
+      "category": "PSU",
+      "pcMode": "MAIN",
+      "topic": "hardware/psu"
+    },
+    {
+      "id": "pichau-example-hf-cooler",
+      "name": "Water Cooler Aqua 360X P1 Black Edition",
+      "sku": "44352",
+      "l": 460,
+      "w": 225,
+      "h": 140,
+      "demo": false,
+      "oem": false,
+      "category": "COOLER",
+      "pcMode": "MAIN",
+      "topic": "hardware/cooler"
+    },
+    {
+      "id": "656323b0-7e70-4f17-8ae1-2d6e1ec3a66c",
+      "name": "AMD Ryzen 9 7900X",
+      "sku": "34937",
+      "l": 135,
+      "w": 135,
+      "h": 95,
+      "demo": false,
+      "oem": false,
+      "category": "CPU",
+      "pcMode": "MAIN",
+      "topic": "hardware/cpu"
+    },
+    {
+      "id": "eab8abae-03f0-4a90-972c-f7a578f515aa",
+      "name": "Water Cooler Aigo Darkflash DV360s LCD",
+      "sku": "52525",
+      "l": 450,
+      "w": 210,
+      "h": 145,
+      "demo": false,
+      "oem": false,
+      "category": "COOLER",
+      "pcMode": "MAIN",
+      "topic": "hardware/cooler"
+    },
+    {
+      "id": "ed22aaeb-87f9-4073-9271-20875798b971",
+      "name": "Asus X870 MAX GAMING WIFI7",
+      "sku": "62626",
+      "l": 360,
+      "w": 275,
+      "h": 70,
+      "demo": false,
+      "oem": false,
+      "category": "MOTHERBOARD",
+      "pcMode": "MAIN",
+      "topic": "hardware/motherboard"
+    },
+    {
+      "id": "7a5718a6-e4c3-4ae8-affa-ba74ce8a9359",
+      "name": "Memoria Pichau Hubble 16GB 5600Mhz",
+      "sku": "50724",
+      "l": 160,
+      "w": 60,
+      "h": 20,
+      "demo": false,
+      "oem": false,
+      "category": "MEMORY",
+      "pcMode": "MAIN",
+      "topic": "hardware/memory"
+    },
+    {
+      "id": "7f910e55-4681-45f9-9ccf-41701dd79e7b",
+      "name": "MSI Geforce RTX 5080 Ventus 3x",
+      "sku": "66794",
+      "l": 385,
+      "w": 240,
+      "h": 90,
+      "demo": false,
+      "oem": false,
+      "category": "GPU",
+      "pcMode": "MAIN",
+      "topic": "hardware/gpu"
+    },
+    {
+      "id": "a3ee0e98-2a5e-455e-8bbe-d0f6a16c34e8",
+      "name": "Gabinete Mancer CV550 Black",
+      "sku": "48137",
+      "l": 490,
+      "w": 360,
+      "h": 510,
+      "demo": false,
+      "oem": false,
+      "category": "PREPARED_PC",
+      "pcMode": "MAIN",
+      "topic": "hardware/case"
+    },
+    {
+      "id": "9f4fcbc7-1269-48d3-b751-49a85f5dc125",
+      "name": "Kit Ventoinhas Corsair RS120 Black",
+      "sku": "54850",
+      "l": 135,
+      "w": 150,
+      "h": 85,
+      "demo": false,
+      "oem": false,
+      "category": "FAN",
+      "pcMode": "MAIN",
+      "topic": "hardware/fan"
+    }
+  ],
+  "dimensionBoxes": [
+    {
+      "id": "415c2318-baef-4b76-ba47-a315ff11e388",
+      "name": "CX 101",
+      "l": 370,
+      "w": 595,
+      "h": 270,
+      "demo": false
+    },
+    {
+      "id": "89c89262-8b8a-42b4-bd9b-0dbc9af8d294",
+      "name": "CX MANCER",
+      "l": 600,
+      "w": 350,
+      "h": 700,
+      "demo": false
+    },
+    {
+      "id": "47002e13-1281-40d7-bf65-49e13c4b76ca",
+      "name": "CX HOME",
+      "l": 550,
+      "w": 300,
+      "h": 570,
+      "demo": false
+    },
+    {
+      "id": "a4526ef1-f1f6-4720-baa1-45d35693da8f",
+      "name": "CX MANCER M",
+      "l": 420,
+      "w": 560,
+      "h": 720,
+      "demo": false
+    },
+    {
+      "id": "ef0d9bd4-8375-4379-85d3-a701f30f9605",
+      "name": "CX 07",
+      "l": 190,
+      "w": 148,
+      "h": 103,
+      "demo": false
+    },
+    {
+      "id": "81e1ce6a-febc-40db-9850-1394a4eeb8b9",
+      "name": "CX 26",
+      "l": 190,
+      "w": 155,
+      "h": 75,
+      "demo": false
+    },
+    {
+      "id": "2d9215df-0e54-4aec-9544-9700c804b650",
+      "name": "CX 8",
+      "l": 290,
+      "w": 190,
+      "h": 160,
+      "demo": false
+    },
+    {
+      "id": "ebc5bbdb-fbee-40ba-9cd3-e85099491dbb",
+      "name": "CX 11",
+      "l": 330,
+      "w": 298,
+      "h": 150,
+      "demo": false
+    },
+    {
+      "id": "285eaa3f-b770-4998-afa2-6f82fc00ff0c",
+      "name": "CX 27",
+      "l": 340,
+      "w": 300,
+      "h": 225,
+      "demo": false
+    },
+    {
+      "id": "d6f0aa36-5d4d-44f6-8a85-be56010da5bf",
+      "name": "CX 01",
+      "l": 415,
+      "w": 300,
+      "h": 125,
+      "demo": false
+    },
+    {
+      "id": "ed42d4f7-4a6a-474c-9227-0c8167b86748",
+      "name": "CX 100",
+      "l": 490,
+      "w": 300,
+      "h": 250,
+      "demo": false
+    },
+    {
+      "id": "e6a8c8d3-ba8a-49a7-afe0-e118208d4f10",
+      "name": "CX 17",
+      "l": 585,
+      "w": 350,
+      "h": 960,
+      "demo": false
+    },
+    {
+      "id": "9ad601af-b154-4a67-b7f1-20b2c614011d",
+      "name": "CX HOME PP",
+      "l": 420,
+      "w": 260,
+      "h": 410,
+      "demo": false
+    },
+    {
+      "id": "63de9bca-bd1e-4176-97a1-92a900780388",
+      "name": "CX MANCER P (BABY)",
+      "l": 250,
+      "w": 520,
+      "h": 495,
+      "demo": false
+    },
+    {
+      "id": "5b02bd8e-c85b-4aa8-8828-2fd8824b6b0b",
+      "name": "CX Mancer G Intermediária",
+      "l": 750,
+      "w": 460,
+      "h": 760,
+      "demo": false
+    }
+  ],
+  "dimensionPcs": [
+    {
+      "id": "example-66705",
+      "code": "PCM-Pichau-Highflyer-66705",
+      "name": "Highflyer · Ryzen 7 / RTX 5070 Ti",
+      "kind": "BASE",
+      "baseCode": "",
+      "sourceUrl": "https://www.pichau.com.br/pc-gamer-pichau-highflyer-amd-ryzen-7-9850x3d-geforce-rtx-5070-ti-16gb-32gb-ddr5-ssd-m-2-2tb",
+      "note": "Composição de demonstração baseada na descrição pública. SKUs das peças e todas as medidas são fictícios. Marcas/modelos e embalagens acompanhantes precisam ser confirmados na operação.",
+      "demo": true,
+      "aliases": [
+        "66705"
+      ],
+      "items": [
+        {
+          "id": "842ef570-c394-4b96-86b2-b89279146ec5",
+          "productId": "pichau-example-hf-pc",
+          "mode": "MAIN",
+          "origin": "CONFIG",
+          "quantity": 1,
+          "customized": false
+        },
+        {
+          "id": "7cc5f612-3be1-4264-b445-b152ec1468d6",
+          "productId": "pichau-example-hf-cpu",
+          "mode": "MAIN",
+          "origin": "CONFIG",
+          "quantity": 1,
+          "customized": false
+        },
+        {
+          "id": "ea5a1577-143c-43fa-8e52-b6fd944710f4",
+          "productId": "pichau-example-hf-mb",
+          "mode": "MAIN",
+          "origin": "CONFIG",
+          "quantity": 1,
+          "customized": false
+        },
+        {
+          "id": "a8651c18-5de1-4ce2-b09d-7300dcdd976d",
+          "productId": "pichau-example-hf-gpu",
+          "mode": "MAIN",
+          "origin": "CONFIG",
+          "quantity": 1,
+          "customized": false
+        },
+        {
+          "id": "ba4e4f36-b06f-46a2-a31a-b3e3bfb6f5ae",
+          "productId": "pichau-example-hf-ram",
+          "mode": "NESTED",
+          "origin": "CONFIG",
+          "quantity": 1,
+          "customized": false
+        },
+        {
+          "id": "083fb49c-a1ed-451e-a9b2-384e2129f68b",
+          "productId": "pichau-example-hf-ssd",
+          "mode": "NESTED",
+          "origin": "CONFIG",
+          "quantity": 1,
+          "customized": false
+        },
+        {
+          "id": "b1661ecb-21e1-4b72-9fe6-42a41b55087a",
+          "productId": "pichau-example-hf-psu",
+          "mode": "MAIN",
+          "origin": "CONFIG",
+          "quantity": 1,
+          "customized": false
+        },
+        {
+          "id": "9d571e79-5cec-49da-8841-9957e076d760",
+          "productId": "pichau-example-hf-cooler",
+          "mode": "MAIN",
+          "origin": "CONFIG",
+          "quantity": 1,
+          "customized": false
+        },
+        {
+          "id": "dd6dd3fe-4049-4f3a-8e5b-1a31374acf0f",
+          "productId": "pichau-example-hf-power-cable",
+          "mode": "MAIN",
+          "origin": "CONFIG",
+          "quantity": 1,
+          "customized": false
+        },
+        {
+          "id": "f4859f30-45f0-40c2-b3ef-8aa00b2a2d4c",
+          "productId": "pichau-example-hf-hdmi",
+          "mode": "MAIN",
+          "origin": "CONFIG",
+          "quantity": 1,
+          "customized": false
+        }
+      ]
+    }
+  ]
+}

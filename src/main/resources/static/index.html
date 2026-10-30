@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Inbox | Preparar embalagem</title>
+    <link rel="stylesheet" href="styles.css?v=20261030-2" />
+    <script src="vendor/vue.global.prod.js" defer></script>
+    <script src="packing-view.js?v=20261030-2" defer></script>
+    <script src="box-preview.js?v=20261030-2" defer></script>
+    <script src="app.js?v=20261030-2" defer></script>
+    <script>
+      // Mostra uma opção de recarregar se algum script impedir o Vue de iniciar.
+      window.addEventListener('DOMContentLoaded', () => {
+        if (document.getElementById('app').hasAttribute('v-cloak')) {
+          document.getElementById('startup-error').hidden = false;
+        }
+      });
+    </script>
+  </head>
+  <body>
+    <div id="startup-error" class="panel startup-error" role="alert" hidden>
+      <h2>Não foi possível abrir a interface.</h2>
+      <p>Reinicie a aplicação e recarregue a página.</p>
+      <button class="primary" type="button" onclick="window.location.reload()">Recarregar</button>
+    </div>
+    <div id="app" v-cloak>
+      <header>
+        <a class="brand" href="/"
+          ><svg
+            class="brand-icon"
+            viewBox="0 0 32 32"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <path d="M6 13l10 5 10-5v11l-10 5-10-5V13Z" />
+            <path d="M16 18v11M6 13l10-5 10 5" />
+            <path d="m6 13-5-5 10-5 5 5 5-5 10 5-5 5M6 13l-5 5 10 5 5-5 5 5 10-5-5-5" /></svg
+          ><span>inbox</span></a
+        ><span class="local"><span aria-hidden="true">●</span> Local</span>
+      </header>
+      <div class="toast-region" aria-live="polite" aria-atomic="false">
+        <transition-group name="toast" tag="div" class="toast-stack">
+          <div
+            v-for="notification in notifications"
+            :key="notification.id"
+            class="toast"
+            :class="'toast-' + notification.type"
+            :role="notification.type === 'error' ? 'alert' : 'status'"
+          >
+            <span class="toast-icon" aria-hidden="true"
+              >{{ notification.type === 'success' ? '✓' : '!' }}</span
+            >
+            <span>{{ notification.message }}</span>
+            <button
+              type="button"
+              class="toast-close"
+              @click="dismissNotification(notification.id)"
+              aria-label="Fechar notificação"
+            >
+              ×
+            </button>
+            <span class="toast-progress" aria-hidden="true"></span>
+          </div>
+        </transition-group>
+      </div>
+      <main>
+        <nav class="tabs" aria-label="Navegação principal">
+          <button
+            :class="{ chosen: tab === 'packing' }"
+            :aria-current="tab === 'packing' ? 'page' : undefined"
+            @click="tab = 'packing'"
+          >
+            Embalar pedido</button
+          ><button
+            :class="{ chosen: tab === 'catalog' }"
+            :aria-current="tab === 'catalog' ? 'page' : undefined"
+            @click="tab = 'catalog'"
+          >
+            Cadastros
+          </button>
+        </nav>
+        <h1>{{ tab === 'packing' ? 'Embalar pedido' : 'Cadastros' }}</h1>
+        <p v-if="loading" class="loading-status" role="status">
+          <span class="spinner" aria-hidden="true"></span> Carregando catálogo…
+        </p>
+        <div v-if="loadError" class="notice" role="alert">
+          <p>{{ loadError }}</p>
+          <button class="text-button" @click="loadCatalog" :disabled="loading">
+            Tentar novamente
+          </button>
+        </div>
+        <div v-if="tab === 'packing'" class="layout packing-layout">
+          <section class="panel">
+            <h2>Selecionar produtos</h2>
+            <p v-if="!loading && !loadError && !products.length" class="empty">
+              Nenhum produto cadastrado. Acesse a aba Cadastros para começar.
+            </p>
+            <div class="product-filters">
+              <label
+                >Buscar por nome ou SKU<input
+                  type="search"
+                  v-model="productSearch"
+                  placeholder="Ex.: Ryzen ou 50279"
+              /></label>
+              <label
+                >Categoria<select v-model="categoryFilter">
+                  <option value="">Todas as categorias</option>
+                  <option
+                    v-for="category in categories"
+                    :key="category.code"
+                    :value="category.code"
+                  >
+                    {{ category.name }}
+                  </option>
+                </select></label
+              >
+            </div>
+            <p v-if="!loading && !loadError && products.length" class="footnote" role="status">
+              {{ filteredProducts.length }} produtos · {{ items.length }} selecionados
+            </p>
+            <div
+              v-if="!loading && !loadError && products.length && !filteredProducts.length"
+              class="empty"
+            >
+              <p>Nenhum produto encontrado para esta busca e categoria.</p>
+              <button class="text-button" @click="productSearch = ''; categoryFilter = ''">
+                Limpar filtros
+              </button>
+            </div>
+            <section v-for="group in productGroups" :key="group.code" class="product-group">
+              <h3 class="category-heading">
+                {{ group.name }} <span>{{ group.products.length }}</span>
+              </h3>
+              <ul class="item-list">
+                <li
+                  v-for="product in group.products"
+                  :key="product.id"
+                  :class="{ 'is-selected': selected[product.id] !== undefined }"
+                >
+                  <label class="product-choice"
+                    ><input
+                      type="checkbox"
+                      :checked="selected[product.id] !== undefined"
+                      @change="toggleProduct(product.id, $event.target.checked)"
+                    /><span
+                      ><strong>{{ product.name }}</strong
+                      ><small>SKU: {{ product.sku || 'Não informado' }}</small></span
+                    ></label
+                  ><label v-if="selected[product.id] !== undefined" class="quantity"
+                    >Quantidade<input
+                      v-model.number="selected[product.id]"
+                      type="number"
+                      min="1"
+                      max="999"
+                      step="1"
+                  /></label>
+                </li>
+              </ul>
+            </section>
+            <p v-if="invalidQuantity" role="alert">Informe quantidades inteiras entre 1 e 999.</p>
+          </section>
+          <aside>
+            <section class="panel summary">
+              <div class="section-heading">
+                <h2>Caixa recomendada</h2>
+                <span v-if="totalQuantity" class="count-badge">{{ totalQuantity }} un.</span>
+              </div>
+              <p v-if="totalQuantity > 200" role="alert">Selecione no máximo 200 unidades.</p>
+              <p v-if="items.some(item => item.local)" role="alert">
+                O cálculo ainda não inclui produtos cadastrados neste navegador.
+              </p>
+              <button
+                class="primary"
+                :disabled="!canCalculate || calculating"
+                @click="calculateBox"
+              >
+                <span v-if="calculating" class="spinner" aria-hidden="true"></span>{{ calculating ?
+                'Calculando…' : 'Calcular caixa' }}
+              </button>
+              <transition name="result">
+                <div v-if="calculation" class="box-result" role="status">
+                  <template v-if="calculation.caixa">
+                    <strong>{{ calculation.caixa.nome }}</strong>
+                    <p>
+                      Medidas internas: {{ format(calculation.caixa.comprimento / 10) }} × {{
+                      format(calculation.caixa.largura / 10) }} × {{ format(calculation.caixa.altura
+                      / 10) }} cm
+                    </p>
+                  </template>
+                  <p v-else>Não foi encontrada uma caixa compatível para estes itens.</p>
+                </div>
+              </transition>
+              <p v-if="!calculation && !calculating && !items.length" class="empty-hint">
+                Selecione os produtos para começar.
+              </p>
+            </section>
+            <transition name="result"
+              ><packing-view
+                v-if="calculation && calculation.caixa"
+                :result="calculation"
+              ></packing-view
+            ></transition>
+          </aside>
+        </div>
+        <div v-else class="layout catalog-layout">
+          <section class="panel">
+            <div class="section-heading">
+              <div>
+                <h2>
+                  {{ editingId !== null ? 'Editar' : 'Cadastrar' }} {{ catalogType === 'product' ?
+                  'produto' : 'caixa' }}
+                </h2>
+                <p>
+                  Medidas {{ catalogType === 'product' ? 'externas' : 'internas' }} em centímetros.
+                </p>
+              </div>
+            </div>
+            <div class="tabs">
+              <button
+                :disabled="saving"
+                :class="{ chosen: catalogType === 'product' }"
+                @click="catalogType = 'product'"
+              >
+                Produtos</button
+              ><button
+                :disabled="saving"
+                :class="{ chosen: catalogType === 'box' }"
+                @click="catalogType = 'box'"
+              >
+                Caixas
+              </button>
+            </div>
+            <form ref="catalogForm" @submit.prevent="addItem">
+              <label class="name-field"
+                >Nome {{ catalogType === 'product' ? 'do produto' : 'da caixa' }}<input
+                  v-model.trim="form.name"
+                  required
+                  maxlength="120"
+                  :placeholder="catalogType === 'product' ? 'Ex.: placa de vídeo' : 'Ex.: CX MANCER M'"
+              /></label>
+              <div v-if="catalogType === 'product'" class="product-filters">
+                <label>SKU<input v-model.trim="form.sku" maxlength="80" /></label
+                ><label
+                  >Categoria<select v-model="form.category" required>
+                    <option value="UNCATEGORIZED">Sem categoria</option>
+                    <option
+                      v-for="category in categoryOptions"
+                      :key="category.code"
+                      :value="category.code"
+                    >
+                      {{ category.name }}
+                    </option>
+                  </select></label
+                >
+              </div>
+              <div class="dimensions">
+                <label
+                  >Comprimento (cm)<input
+                    v-model.number="form.length"
+                    type="number"
+                    min="0.1"
+                    max="10000"
+                    step="0.1"
+                    required
+                    placeholder="0,0"
+                /></label>
+                <label
+                  >Largura (cm)<input
+                    v-model.number="form.width"
+                    type="number"
+                    min="0.1"
+                    max="10000"
+                    step="0.1"
+                    required
+                    placeholder="0,0"
+                /></label>
+                <label
+                  >Altura (cm)<input
+                    v-model.number="form.height"
+                    type="number"
+                    min="0.1"
+                    max="10000"
+                    step="0.1"
+                    required
+                    placeholder="0,0"
+                /></label>
+              </div>
+              <button
+                class="primary"
+                type="submit"
+                :disabled="saving || calculating || loading || !!loadError"
+              >
+                <span v-if="saving" class="spinner" aria-hidden="true"></span>{{ saving ?
+                'Salvando…' : editingId !== null ? 'Salvar alterações' : '+ Cadastrar' }}
+              </button>
+              <button
+                v-if="editingId !== null"
+                class="text-button"
+                type="button"
+                :disabled="saving"
+                @click="cancelEdit"
+              >
+                Cancelar
+              </button>
+            </form>
+          </section>
+          <section class="panel catalog-list">
+            <div class="list-heading">
+              <h3>
+                {{ catalogType === 'product' ? 'Produtos' : 'Caixas' }} cadastrados
+                <span>{{ catalogItems.length }}</span>
+              </h3>
+            </div>
+            <div v-if="catalogType === 'product'" class="product-filters">
+              <label
+                >Buscar por nome ou SKU<input
+                  type="search"
+                  v-model="catalogSearch"
+                  placeholder="Nome ou SKU"
+              /></label>
+              <label
+                >Categoria<select v-model="catalogCategory">
+                  <option value="">Todas as categorias</option>
+                  <option
+                    v-for="category in categories"
+                    :key="category.code"
+                    :value="category.code"
+                  >
+                    {{ category.name }}
+                  </option>
+                </select></label
+              >
+            </div>
+            <p
+              v-if="catalogType === 'product' && catalogItems.length"
+              class="footnote"
+              role="status"
+            >
+              {{ displayedCatalogItems.length }} de {{ products.length }} produtos
+            </p>
+            <div v-if="!loading && !loadError && !catalogItems.length" class="empty">
+              <span class="box-icon">◇</span>
+              <h3>Seu cadastro começa aqui</h3>
+              <p>Preencha os campos acima para começar.</p>
+            </div>
+            <div
+              v-else-if="catalogType === 'product' && !loading && !loadError && !displayedCatalogItems.length"
+              class="empty"
+            >
+              <p>Nenhum produto encontrado.</p>
+              <button class="text-button" @click="catalogSearch = ''; catalogCategory = ''">
+                Limpar filtros
+              </button>
+            </div>
+            <transition-group
+              v-else
+              name="list"
+              tag="ul"
+              class="item-list"
+              :class="{ 'box-cards': catalogType === 'box' }"
+              ><li
+                v-for="item in displayedCatalogItems"
+                :key="item.id"
+                :class="{ 'is-editing': editingId === item.id }"
+              >
+                <button
+                  v-if="catalogType === 'box'"
+                  type="button"
+                  class="box-preview-button"
+                  @click="previewBox = item"
+                  :aria-label="'Abrir visualização 3D de ' + item.name"
+                >
+                  <box-preview :box="item"></box-preview
+                  ><span class="preview-label">Ver em 3D ↗</span>
+                </button>
+                <div>
+                  <strong>{{ item.name }}</strong>
+                  <p>
+                    {{ format(item.length / 10) }} × {{ format(item.width / 10) }} × {{
+                    format(item.height / 10) }} cm
+                  </p>
+                </div>
+                <div class="catalog-actions">
+                  <button
+                    class="text-button"
+                    :disabled="saving || calculating"
+                    @click="startEdit(item)"
+                    :aria-label="'Editar ' + item.name"
+                  >
+                    Editar</button
+                  ><button
+                    class="text-button danger-button"
+                    :disabled="saving || calculating"
+                    @click="removeItem(item.id)"
+                    :aria-label="'Remover ' + item.name"
+                  >
+                    Remover
+                  </button>
+                </div>
+              </li></transition-group
+            >
+          </section>
+        </div>
+      </main>
+      <box-viewer
+        v-if="previewBox"
+        :box="previewBox"
+        :boxes="boxes"
+        @close="previewBox = null"
+      ></box-viewer>
+    </div>
+  </body>
+</html>
