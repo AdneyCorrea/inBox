@@ -32,3 +32,9 @@ build/
 ### VS Code ###
 .vscode/
 /catalogo-local/
+
+# Dados pessoais e artefatos de distribuicao (ZIP publicado em Releases)
+/inbox-backup.json
+/inBox-Windows.zip
+/inBox-Windows/
+*.log
