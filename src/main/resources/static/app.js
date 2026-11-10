@@ -39,7 +39,6 @@ Vue.createApp({
       previewBox: null,
       editingId: null,
       saving: false,
-      nextId: Date.now(),
       loading: false,
       loadError: '',
       calculating: false,
@@ -106,8 +105,7 @@ Vue.createApp({
         !this.loadError &&
         !this.invalidQuantity &&
         this.items.length > 0 &&
-        this.totalQuantity <= 200 &&
-        this.items.every((item) => !item.local)
+        this.totalQuantity <= 200
       );
     },
     catalogItems() {
@@ -230,39 +228,13 @@ Vue.createApp({
             category: item.categoria || 'UNCATEGORIZED',
             length: item.comprimento,
             width: item.largura,
-            height: item.altura,
-            local: false
+            height: item.altura
           }));
         };
+        await this.importLegacyCatalog();
         const [products, boxes] = await Promise.all([read('/api/produtos'), read('/api/caixas')]);
         this.products = products;
         this.boxes = boxes;
-        try {
-          const saved = JSON.parse(localStorage.getItem('inbox.catalog.v1') || 'null');
-          const valid = (list) =>
-            Array.isArray(list) &&
-            list.every(
-              (item) =>
-                item &&
-                typeof item.name === 'string' &&
-                Number.isSafeInteger(item.id) &&
-                ['length', 'width', 'height'].every(
-                  (key) => Number.isFinite(item[key]) && item[key] > 0
-                )
-            );
-          if (saved && valid(saved.products) && valid(saved.boxes)) {
-            this.products.push(...saved.products.map((item) => ({ ...item, local: true })));
-            this.boxes.push(...saved.boxes.map((item) => ({ ...item, local: true })));
-            this.nextId =
-              Math.max(
-                Date.now(),
-                ...saved.products.map((p) => p.id),
-                ...saved.boxes.map((b) => b.id)
-              ) + 1;
-          }
-        } catch {
-          this.notify('Não foi possível recuperar os cadastros do navegador.', 'error');
-        }
       } catch (error) {
         this.loadError =
           error instanceof TypeError
@@ -336,17 +308,10 @@ Vue.createApp({
       this.saving = true;
       try {
         await this.apiWrite(
-          previous && !previous.local ? url + '/' + encodeURIComponent(previous.id) : url,
-          previous && !previous.local ? 'PUT' : 'POST',
+          previous ? url + '/' + encodeURIComponent(previous.id) : url,
+          previous ? 'PUT' : 'POST',
           body
         );
-        if (previous?.local) {
-          if (target === 'product') {
-            this.products = this.products.filter((item) => item.id !== previous.id);
-            delete this.selected[previous.id];
-          } else this.boxes = this.boxes.filter((item) => item.id !== previous.id);
-          this.saveCatalog();
-        }
         this.calculation = null;
         this.cancelEdit();
         await this.loadCatalog();
@@ -377,17 +342,15 @@ Vue.createApp({
       if (!item) return;
       this.saving = true;
       try {
-        if (!item.local)
-          await this.apiWrite(
-            (this.catalogType === 'product' ? '/api/produtos/' : '/api/caixas/') +
-              encodeURIComponent(id),
-            'DELETE'
-          );
+        await this.apiWrite(
+          (this.catalogType === 'product' ? '/api/produtos/' : '/api/caixas/') +
+            encodeURIComponent(id),
+          'DELETE'
+        );
         if (this.catalogType === 'product') {
           this.products = this.products.filter((item) => item.id !== id);
           delete this.selected[id];
         } else this.boxes = this.boxes.filter((item) => item.id !== id);
-        if (item.local) this.saveCatalog();
         if (this.editingId === id) this.cancelEdit();
         this.calculation = null;
         this.notify(
@@ -410,18 +373,43 @@ Vue.createApp({
       if (checked) this.selected[id] = 1;
       else delete this.selected[id];
     },
-    saveCatalog() {
-      try {
-        localStorage.setItem(
-          'inbox.catalog.v1',
-          JSON.stringify({
-            products: this.products.filter((item) => item.local),
-            boxes: this.boxes.filter((item) => item.local)
-          })
-        );
-      } catch {
-        this.notify('Não foi possível atualizar o cadastro do navegador.', 'error');
+    async importLegacyCatalog() {
+      const key = 'inbox.catalog.v1';
+      const raw = localStorage.getItem(key);
+      if (!raw) return;
+      const saved = JSON.parse(raw);
+      const valid = (list) => Array.isArray(list) && list.every((item) =>
+        item && typeof item.name === 'string' && item.name.trim() &&
+        Number.isSafeInteger(item.id) && item.id >= 0 &&
+        ['length', 'width', 'height'].every((field) =>
+          Number.isInteger(item[field]) && item[field] >= 1 && item[field] <= 100000)
+      ) && new Set(list.map((item) => item.id)).size === list.length;
+      if (!saved || !valid(saved.products) || !valid(saved.boxes)) {
+        throw new Error('Cadastros antigos inválidos. Os dados do navegador foram preservados.');
       }
+      // Salvar antes de enviar permite retomar após falhas sem duplicar cadastros.
+      const originKey = 'inbox.catalog.import.v1';
+      let origin = localStorage.getItem(originKey);
+      if (!origin) {
+        origin = '10000000-1000-4000-8000-100000000000'.replace(/[018]/g, (digit) =>
+          (Number(digit) ^ (crypto.getRandomValues(new Uint8Array(1))[0] & (15 >> (Number(digit) / 4)))).toString(16)
+        );
+        localStorage.setItem(originKey, origin);
+      }
+      for (const [endpoint, list] of [['produtos', saved.products], ['caixas', saved.boxes]]) {
+        for (const item of list) {
+          await this.apiWrite(`/api/${endpoint}/importar/${encodeURIComponent(origin)}/${item.id}`, 'PUT', {
+            nome: item.name,
+            sku: item.sku || '',
+            categoria: item.category || 'UNCATEGORIZED',
+            comprimento: item.length,
+            largura: item.width,
+            altura: item.height
+          });
+        }
+      }
+      // Preservar o legado em caso de falha parcial ou alteração por outra aba.
+      if (localStorage.getItem(key) === raw) localStorage.removeItem(key);
     },
     format(value) {
       return value.toLocaleString('pt-BR', { maximumFractionDigits: 3 });

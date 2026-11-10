@@ -28,6 +28,17 @@ public class ProdutoService {
         return repository.salvar(produto);
     }
 
+    // Repetir a importação não duplica nem sobrescreve um cadastro já importado.
+    public synchronized Produto importar(UUID origem, long idAntigo, Produto registro) {
+        if (idAntigo < 0) throw new IllegalArgumentException("ID antigo inválido.");
+        var id = "legacy-" + UUID.nameUUIDFromBytes((origem + ":Produto:" + idAntigo)
+                .getBytes(java.nio.charset.StandardCharsets.UTF_8));
+        var existente = repository.buscarPorId(id);
+        if (existente.isPresent()) return existente.get();
+        validar(registro);
+        registro.setId(id);
+        return repository.salvar(registro);
+    }
     public Produto atualizar(String id, Produto produto) {
         exigirExistente(id);
         validar(produto);

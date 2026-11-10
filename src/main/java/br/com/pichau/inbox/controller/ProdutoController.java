@@ -37,6 +37,11 @@ public class ProdutoController {
         return service.cadastrar(registro);
     }
 
+    @PutMapping("/importar/{origem}/{idAntigo}")
+    public Produto importar(@PathVariable java.util.UUID origem, @PathVariable long idAntigo,
+                            @RequestBody Produto registro) {
+        return service.importar(origem, idAntigo, registro);
+    }
     @PutMapping("/{id}")
     public Produto atualizar(@PathVariable String id, @RequestBody Produto registro) {
         return service.atualizar(id, registro);

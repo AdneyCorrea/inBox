@@ -79,6 +79,33 @@ class CadastroApiTests {
     }
 
     @Test
+    void importaLegadoSemDuplicarNemSobrescreverCadastros() throws Exception {
+        var origem = java.util.UUID.randomUUID().toString();
+        for (var endpoint : new String[]{"produtos", "caixas"}) {
+            var url = "/api/" + endpoint;
+            var antes = mapper.readTree(request(url, "GET", null).body()).size();
+            var body = "{\"nome\":\"Legado\",\"sku\":\"ANTIGO\",\"categoria\":\"CPU\",\"comprimento\":100,\"largura\":80,\"altura\":50}";
+            var rota = url + "/importar/" + origem + "/123";
+            var criado = request(rota, "PUT", body);
+            assertEquals(200, criado.statusCode());
+            var id = mapper.readTree(criado.body()).get("id").asString();
+            assertEquals(antes + 1, mapper.readTree(request(url, "GET", null).body()).size());
+            assertEquals(200, request(url + "/" + id, "PUT", body.replace("Legado", "Editado")).statusCode());
+            var repetido = request(rota, "PUT", body);
+            assertEquals(200, repetido.statusCode());
+            assertEquals("Editado", mapper.readTree(repetido.body()).get("nome").asString());
+            assertEquals(antes + 1, mapper.readTree(request(url, "GET", null).body()).size());
+            if (endpoint.equals("produtos")) {
+                assertEquals(100, new ProdutoRepository(mapper, diretorio.toString()).buscarPorId(id).orElseThrow().getComprimento());
+            } else {
+                assertEquals(100, new CaixaRepository(mapper, diretorio.toString()).buscarPorId(id).orElseThrow().getComprimento());
+            }
+            assertEquals(400, request(url + "/importar/" + origem + "/456", "PUT", "{}").statusCode());
+            assertEquals(200, request(url + "/importar/" + origem + "/456", "PUT", body).statusCode());
+        }
+    }
+
+    @Test
     void rejeitaDadosInvalidosERegistroInexistente() throws Exception {
         assertEquals(400, request("/api/caixas", "POST", "{\"nome\":\"Inválida\",\"comprimento\":0}").statusCode());
         assertEquals(400, request("/api/produtos", "POST", "{}").statusCode());

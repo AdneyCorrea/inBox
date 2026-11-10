@@ -37,6 +37,11 @@ public class CaixaController {
         return service.cadastrar(registro);
     }
 
+    @PutMapping("/importar/{origem}/{idAntigo}")
+    public Caixa importar(@PathVariable java.util.UUID origem, @PathVariable long idAntigo,
+                            @RequestBody Caixa registro) {
+        return service.importar(origem, idAntigo, registro);
+    }
     @PutMapping("/{id}")
     public Caixa atualizar(@PathVariable String id, @RequestBody Caixa registro) {
         return service.atualizar(id, registro);
